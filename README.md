@@ -57,3 +57,12 @@ It opens a browser, waits for you to navigate to the generator page, then dumps 
 ## Prompt architecture
 
 See `.claude/skills/higgsfield-seedance/prompt-architecture.md` — the five-slot structure (subject, action, camera, lighting, style) Seedance 2.0 responds best to.
+
+## Related resources
+
+This skill is a **browser automation** tool — it drives Higgsfield's live UI. For **prompt engineering** resources (style packs, hook frameworks, camera vocabulary), pair it with:
+
+- [`beshuaxian/higgsfield-seedance2-jineng`](https://github.com/beshuaxian/higgsfield-seedance2-jineng) — 15 Seedance 2.0 prompt skills (cinematic, 3D CGI, anime, e-commerce ads, music videos, etc.) with a 2-second hook framework and camera encyclopedia. Useful as a prompt reference library alongside this automation skill.
+- [`OSideMedia/higgsfield-ai-prompt-skill`](https://github.com/OSideMedia/higgsfield-ai-prompt-skill) — Rewrite playbook and lint rules for Seedance prompts.
+
+The two categories are complementary: use the prompt libraries above to *write* a good Seedance brief, then use this skill to *execute* it through the real UI on-camera.
