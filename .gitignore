@@ -1,0 +1,5 @@
+.chrome-profile/
+outputs/*
+!outputs/.gitkeep
+automation/node_modules/
+.DS_Store

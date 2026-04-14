@@ -1,0 +1,15 @@
+{
+  "name": "higgsfield-seedance-automation",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Claude-driven Playwright automation for Higgsfield Seedance 2.0",
+  "type": "module",
+  "scripts": {
+    "run": "node run.js",
+    "recon": "node recon.js"
+  },
+  "dependencies": {
+    "playwright": "^1.59.1",
+    "yargs": "^17.7.2"
+  }
+}
