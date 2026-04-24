@@ -1,8 +1,8 @@
 {
-  "name": "higgsfield-seedance-automation",
+  "name": "imagineart-automation",
   "version": "0.1.0",
   "private": true,
-  "description": "Claude-driven Playwright automation for Higgsfield Seedance 2.0",
+  "description": "Claude-driven Playwright automation for ImagineArt",
   "type": "module",
   "scripts": {
     "run": "node run.js",

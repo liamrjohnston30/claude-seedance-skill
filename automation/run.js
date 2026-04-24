@@ -9,7 +9,7 @@ import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { drive } from './higgsfield.js';
+import { drive } from './imagineart.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PROJECT_ROOT = path.resolve(__dirname, '..');
@@ -19,7 +19,7 @@ const argv = yargs(hideBin(process.argv))
     alias: 'p',
     type: 'string',
     demandOption: true,
-    describe: 'Seedance 2.0 motion prompt (see prompt-architecture.md)',
+    describe: 'ImagineArt video prompt (see prompt-architecture.md)',
   })
   .option('image', {
     alias: 'i',

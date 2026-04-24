@@ -1,6 +1,6 @@
-# Seedance 2.0 — prompt architecture
+# ImagineArt video — prompt architecture
 
-Seedance 2.0 is an image-to-video model. The reference image carries subject and composition; the prompt primarily describes **motion, camera, and atmosphere**. Think of it less like a text-to-image prompt and more like a one-shot director's note.
+ImagineArt's video generator is an image-to-video model. The reference image carries subject and composition; the prompt primarily describes **motion, camera, and atmosphere**. Think of it less like a text-to-image prompt and more like a one-shot director's note.
 
 ## The five-slot structure
 
@@ -59,4 +59,4 @@ Good (five slots filled):
 
 ## Length budget
 
-Keep prompts under 80 words. Seedance 2.0 ignores long tails. Front-load the five slots; cut adjectives that don't change what the model does.
+Keep prompts under 80 words. Front-load the five slots; cut adjectives that don't change what the model does.

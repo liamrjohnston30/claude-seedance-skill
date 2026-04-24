@@ -1,6 +1,5 @@
 // probe-image.js — Click the "Image" tab on the home page and dump all links
-// on the resulting view. The image model cards (Soul, Nano Banana, Flux, etc)
-// should surface href values we can use.
+// on the resulting view. The image model cards should surface href values we can use.
 
 import { chromium } from 'playwright';
 import path from 'node:path';
@@ -23,7 +22,7 @@ const context = await chromium.launchPersistentContext(USER_DATA_DIR, {
 const page = context.pages()[0] || (await context.newPage());
 
 console.log('→ Opening home...');
-await page.goto('https://higgsfield.ai/', { waitUntil: 'domcontentloaded' }).catch(() => {});
+await page.goto('https://www.imagine.art/', { waitUntil: 'domcontentloaded' }).catch(() => {});
 await page.waitForTimeout(3000);
 
 console.log('→ Clicking Image tab...');
@@ -49,7 +48,7 @@ const data = await page.evaluate(() => {
         href: abs(a.getAttribute('href')),
         text: ((a.innerText || '').slice(0, 50)).replace(/\s+/g, ' ').trim(),
       }))
-      .filter((l) => l.href && l.href !== 'https://higgsfield.ai/'),
+      .filter((l) => l.href && l.href !== 'https://www.imagine.art/'),
     headings: [...document.querySelectorAll('h1, h2, h3')]
       .slice(0, 20)
       .map((h) => (h.innerText || '').slice(0, 80)),

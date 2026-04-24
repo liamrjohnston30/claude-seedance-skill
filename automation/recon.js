@@ -1,4 +1,4 @@
-// recon.js — One-shot DOM recon against a specific Higgsfield URL.
+// recon.js — One-shot DOM recon against a specific ImagineArt URL.
 //
 // Usage:
 //   node automation/recon.js <url>
@@ -17,7 +17,7 @@ const PROJECT_ROOT = path.resolve(__dirname, '..');
 const USER_DATA_DIR = path.join(PROJECT_ROOT, '.chrome-profile');
 const OUTPUT_DIR = path.join(PROJECT_ROOT, 'outputs');
 
-const url = process.argv[2] || 'https://higgsfield.ai/create/video?model=seedance_2_0';
+const url = process.argv[2] || 'https://www.imagine.art/video/create/seedance-2';
 
 await fs.mkdir(OUTPUT_DIR, { recursive: true });
 

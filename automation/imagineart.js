@@ -1,11 +1,11 @@
-// higgsfield.js — core Playwright automation for driving Higgsfield Seedance 2.0
+// imagineart.js — core Playwright automation for driving ImagineArt video generation
 //
 // Design notes:
 // - Uses a persistent Chromium user-data-dir so the user stays logged in across runs.
 //   First run: user logs in manually, script waits. Subsequent runs: auto-authenticated.
 // - Exposes a single drive() function that takes { prompt, imagePath, outputDir } and
 //   returns { videoUrl, screenshotPaths }. The CLI wrapper in run.js calls this.
-// - Selectors are defined at the top so they can be patched in one place when Higgsfield
+// - Selectors are defined at the top so they can be patched in one place when ImagineArt
 //   ships UI changes. Run `node recon.js` to auto-dump the current DOM snapshot.
 
 import { chromium } from 'playwright';
@@ -17,33 +17,28 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PROJECT_ROOT = path.resolve(__dirname, '..');
 const USER_DATA_DIR = path.join(PROJECT_ROOT, '.chrome-profile');
 
-// --- Selectors (update after recon if Higgsfield ships UI changes) ---
-// These are initial best-guesses. The first real run will surface the actual selectors
-// via recon.js; patch them here and commit.
+// --- Selectors (confirmed via recon against live DOM) ---
 const SELECTORS = {
   // Sign-in gate
   loginIndicator: 'button:has-text("Sign in"), a:has-text("Sign in"), a:has-text("Log in")',
 
-  // Navigation to Seedance 2.0 model picker
-  modelPickerTrigger: 'button:has-text("Model"), [data-testid="model-picker"]',
-  seedanceOption: 'text=/Seedance.*2\\.?0/i',
-
-  // Reference image upload
+  // Reference image upload (two file inputs present on the video create page)
   imageUploadInput: 'input[type="file"]',
-  imageUploadDropzone: '[data-testid="upload-zone"], .upload-dropzone, text=/drop.*image/i',
 
-  // Prompt textarea
-  promptTextarea: 'textarea[placeholder*="prompt" i], textarea[name="prompt"], [contenteditable="true"]',
+  // Prompt textarea — confirmed placeholder text
+  promptTextarea: 'textarea[placeholder="Describe the video you imagine"]',
 
-  // Generate button
-  generateButton: 'button:has-text("Generate"), button:has-text("Create"), button[type="submit"]',
+  // Generate button — confirmed present on video create page
+  generateButton: 'button:has-text("Generate")',
 
   // Result polling
   resultVideo: 'video[src]',
   resultDownloadLink: 'a[href*=".mp4"], a:has-text("Download")',
 };
 
-const HIGGSFIELD_URL = 'https://higgsfield.ai';
+// Navigate directly to Seedance 2 — no model picker interaction needed
+const IMAGINEART_URL = 'https://www.imagine.art';
+const VIDEO_CREATE_URL = 'https://www.imagine.art/video/create/seedance-2';
 
 // --- Helpers ---
 
@@ -90,32 +85,20 @@ export async function drive({ prompt, imagePath, outputDir, headless = false }) 
   const page = context.pages()[0] || await context.newPage();
 
   try {
-    console.log('→ Navigating to Higgsfield...');
-    await page.goto(HIGGSFIELD_URL, { waitUntil: 'domcontentloaded' });
+    // First hit the home page to check login state
+    console.log('→ Navigating to ImagineArt...');
+    await page.goto(IMAGINEART_URL, { waitUntil: 'domcontentloaded' });
     screenshots.push(await screenshot(page, outputDir, '01-landing'));
 
     await waitForUserLogin(page);
     screenshots.push(await screenshot(page, outputDir, '02-authed'));
 
-    // Give the SPA a beat to hydrate
+    // Navigate directly to Seedance 2 video create page — no model picker needed
+    console.log('→ Opening Seedance 2 video creator...');
+    await page.goto(VIDEO_CREATE_URL, { waitUntil: 'domcontentloaded' });
     await page.waitForLoadState('networkidle', { timeout: 15000 }).catch(() => {});
-
-    // --- Pick Seedance 2.0 ---
-    // Higgsfield's model picker varies. Try a few strategies:
-    console.log('→ Selecting Seedance 2.0...');
-    const modelPicker = page.locator(SELECTORS.modelPickerTrigger).first();
-    if (await modelPicker.isVisible().catch(() => false)) {
-      await modelPicker.click();
-      await page.waitForTimeout(500);
-    }
-    const seedance = page.locator(SELECTORS.seedanceOption).first();
-    if (await seedance.isVisible().catch(() => false)) {
-      await seedance.click();
-    } else {
-      console.warn('⚠️  Could not find Seedance 2.0 option with current selectors. Dumping page for recon.');
-      screenshots.push(await screenshot(page, outputDir, '03-seedance-not-found'));
-    }
-    screenshots.push(await screenshot(page, outputDir, '03-model-selected'));
+    await page.waitForTimeout(2000); // SPA hydration
+    screenshots.push(await screenshot(page, outputDir, '03-video-create'));
 
     // --- Upload reference image if provided ---
     if (imagePath) {
